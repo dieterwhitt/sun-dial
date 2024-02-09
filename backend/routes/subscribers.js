@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 // get a single subscriber
-router.get('/:id', (res, req) => {
+router.get('/:id', (req, res) => {
     res.json({msg: 'GET a single subscriber'});
 });
 
