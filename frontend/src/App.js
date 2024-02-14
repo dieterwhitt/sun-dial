@@ -3,6 +3,7 @@
 // single webpage
 
 import { useState, useEffect } from 'react';
+//import { use } from '../../backend/routes/subscribers';
 
 function Header(){
   return;
@@ -18,15 +19,43 @@ function RenderTimes(){
   const [time, setTime] = useState(0);
   const [timezone, setTimezone] = useState('');
 
-  // function that updates the selected time and timezone based on a 
+  //useEffect which gets the user's location once upon initial render
+  useEffect(() => { 
+    // try to get user's coordinates
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      console.log('geolocation not supported');
+    }
+    // if success
+    function success(position) {
+      const localCoords = [position.coords.latitude, position.coords.longitude];
+      console.log(`lat/long: ${coords}`);
+      // update coordinates
+      setCoords(localCoords);
+      // update city name, update offset
+    }
+    // if error
+    function error() {
+      console.log('Unable to retrieve your location');
+    }
+  }, []);
+
+  // function which updates the current city/country name and offset
+  // based on coordinates
+  function updateCity(){
+
+  }
+
+  // function that updates the selected time and timezone based on the 
   // desired utc offset
-  function updateTime(targetOffset){
+  function updateTime(){
     // first create local time object
     const targetTime = new Date();
     const localOffset = targetTime.getTimezoneOffset();
     // update target time
     // subtract local offset and add target offset
-    targetTime.setTime(targetTime.getTime() + (targetOffset * 60 * 1000)
+    targetTime.setTime(targetTime.getTime() + (offset * 60 * 1000)
       - (localOffset * 60 * 1000));
     //updating
     setTimezone(targetTime.toString().match(/\(([^\)]+)\)$/)[1]);
@@ -43,7 +72,9 @@ function RenderTimes(){
   return(
     <div>Current time in {cityName}:
       <br/>
-      {offset} {time} {timezone}</div>
+      {offset} {time} {timezone}
+      <br/>lat: {coords[0]} long: {coords[1]}
+      </div>
   )
 
   
