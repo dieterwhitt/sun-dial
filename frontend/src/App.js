@@ -13,13 +13,13 @@ function RenderTimes(){
   // setting default location of toronto
   const [cityName, setCityName] = useState('Toronto, Canada');
   // toronto's coordinates
-  const [coords, setCoords] = useState([45.6532,79.3832]);
+  const [coords, setCoords] = useState([43.6532,-79.3832]);
   // toronto's utc offset, time, and timezone
   const [offset, setOffset] = useState(300);
   const [time, setTime] = useState(0);
-  const [timezone, setTimezone] = useState('');
+  const [timezone, setTimezone] = useState('Eastern Standard Time');
 
-  //useEffect which gets the user's location once upon initial render
+  //useEffect which attempts to get the user's location once upon initial render
   useEffect(() => { 
     // try to get user's coordinates
     if (navigator.geolocation) {
@@ -30,10 +30,10 @@ function RenderTimes(){
     // if success
     function success(position) {
       const localCoords = [position.coords.latitude, position.coords.longitude];
-      console.log(`lat/long: ${coords}`);
+      console.log(`lat/long: ${localCoords}`);
       // update coordinates
       setCoords(localCoords);
-      // update city name, update offset
+      // useeffect will update city name, update offset
     }
     // if error
     function error() {
@@ -41,11 +41,42 @@ function RenderTimes(){
     }
   }, []);
 
-  // function which updates the current city/country name and offset
-  // based on coordinates
-  function updateCity(){
+  // useffect which updates the current city/country name
+  // based on when coordinates change
+  // uses the bigdatacloud api
+  useEffect(() => {
+    // get api response
+    const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client?';
+    const location = `latitude=${coords[0]}&longitude=${coords[1]}`
+    // fetching json
+    console.log('attempting to fetch from ' + url + location);
+    fetch(url+location)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('network response was not ok');
+        }
+        // parse the json in the response
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        // update city name
+        const newCity = `${data.city}, 
+        ${data.countryName}`;
 
-  }
+        setCityName(newCity);
+      })
+      .catch(error => {
+        console.error('error trying to fetch: ', error);
+      });
+  },[coords]);
+
+  // useeffect which updates the offset, sunrise, and sunset time when
+  // coordinates change
+  // uses the sunrisesunset.io api
+  useEffect(() => {
+    return;
+  }, [coords]);
 
   // function that updates the selected time and timezone based on the 
   // desired utc offset
@@ -54,7 +85,7 @@ function RenderTimes(){
     const targetTime = new Date();
     const localOffset = targetTime.getTimezoneOffset();
     // update target time
-    // subtract local offset and add target offset
+    // subtract local utc offset and add target utc offset
     targetTime.setTime(targetTime.getTime() + (offset * 60 * 1000)
       - (localOffset * 60 * 1000));
     //updating
@@ -62,10 +93,10 @@ function RenderTimes(){
     setTime(targetTime.toLocaleString());
   }
   
-  //useEffect which updates the time every second
+  // useEffect which updates the time every second 
   useEffect(() => {
     setTimeout(() => {
-      updateTime(offset);
+      updateTime();
     }, 1000);
   });
 
@@ -88,6 +119,8 @@ function Footer(){
   return(
     <p>Created by Dieter Whittingham
       <br/>Powered by
+      <br/>bigdatacloud.com
+      <br/>sunrisesunset.io
     </p>
   );
 }
