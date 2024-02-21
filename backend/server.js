@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 const subscriberRoutes = require('./routes/subscribers');
 
 const nodeMailer = require('nodemailer');
+let cron = require('node-cron');
 
 // express app
 const app = express();
@@ -41,15 +42,16 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(error);
     });
 
+// sending mail
 const message = `
     <h1>hello from nodemailer!</h1>
 `;
 const recipient = '';
 
-async function send(){
+async function send(recipient, message){
     // send email
     const transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
+        host: '',
         port: 465,
         secure: true,
         auth: {
@@ -68,6 +70,21 @@ async function send(){
     console.log("message sent: " + info.messageId);
 }
 
+// get all subscribers and loop/send
+function sendAll(){
+    return;
+}
+
 //send()
 //catch error
 //.catch(e => console.log(e));
+
+// cron function
+cron.schedule('0 8 * * *', () => {
+    // for now, sending daily at 8:00 EST.
+    // subject to change
+    sendAll();
+}, {
+    scheduled: true,
+    timezone: 'America/Toronto'
+});
