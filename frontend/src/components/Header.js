@@ -2,5 +2,7 @@
 // header component
 
 export function Header() {
-  return;
+  return(
+    <div>sundialonline</div>
+  );
 }

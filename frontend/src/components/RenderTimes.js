@@ -58,9 +58,7 @@ export function RenderTimes() {
       .then(data => {
         console.log(data);
         // update city name
-        const newCity = `${data.city}, 
-        ${data.countryName}`;
-
+        const newCity = `${data.city}, ${data.countryName}`;
         setCityName(newCity);
       })
       .catch(error => {
@@ -95,7 +93,8 @@ export function RenderTimes() {
           sunset: data.results.sunset,
           firstLight: data.results.first_light,
           lastLight: data.results.last_light,
-          dayLength: data.results.day_length
+          dayLength: data.results.day_length,
+          goldenHour: data.results.golden_hour
         };
         console.log(newOffset);
         console.log(newSunData);
@@ -131,11 +130,19 @@ export function RenderTimes() {
   });
 
   return (
-    <div>Current time in {cityName}:
-      <br />
-      {offset} {time} {timezone}
-      <br />lat: {coords[0]} long: {coords[1]}
-      <br />sun data: {Object.values(sunData)}
+    <div>
+      <div>Current time in {cityName}:</div>
+      <div>{time} {timezone}</div>
+      <div>*sunrise icon*
+        <br/>Sunrise: {sunData.sunrise}
+        <br/>First Light: {sunData.firstLight}
+        <br/>Day Length: {sunData.dayLength}
+      </div>
+      <div>*sunset icon*
+        <br/>Sunset: {sunData.sunset}
+        <br/>Last Light: {sunData.lastLight}
+        <br/>Golden Hour: {sunData.goldenHour}
+      </div>
     </div>
   );
 }
