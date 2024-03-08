@@ -12,7 +12,6 @@ function App() {
     <div className="App">
       <Header/>
       <RenderTimes/>
-      <SubscriptionForm/>
       <Footer/>
     </div>
   );

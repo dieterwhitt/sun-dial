@@ -2,6 +2,8 @@
 // rendering times component
 
 import { useState, useEffect } from 'react';
+// to handle subscribers
+import { SubscriptionForm } from './SubscriptionForm';
 
 export function RenderTimes() {
   // setting default location of toronto
@@ -143,6 +145,8 @@ export function RenderTimes() {
         <br/>Last Light: {sunData.lastLight}
         <br/>Golden Hour: {sunData.goldenHour}
       </div>
+
+      <SubscriptionForm location={coords} city={cityName} />
     </div>
   );
 }
