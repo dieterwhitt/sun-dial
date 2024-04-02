@@ -9,6 +9,7 @@ Users can subscribe using their email to receive daily updates for a chosen loca
 ## Development
 The frameworks and libraries used in this project are:\
 React, Node.js, Express.js, MongoDB, NodeMailer, Node Cron, and Tailwind CSS\
+The APIs used in this project are sunrisesunset.io (sun data) and bigdatacloud.com (geolocation data)
 
 ## Release
 I've purchased a domain for the website and I am finalizing the email hosting automation and front-end styling. The website should be available to the public very soon!
